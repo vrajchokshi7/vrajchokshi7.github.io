@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OK2Source AI – Procurement OS for Hardware</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --purple: #7c3aed;
+    --purple-light: #a78bfa;
+    --purple-bright: #8b5cf6;
+    --purple-deep: #4c1d95;
+    --navy: #0d0f1a;
+    --navy-mid: #13172a;
+    --navy-card: #1a1e35;
+    --green: #22c55e;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --text-primary: #ffffff;
+    --text-muted: #94a3b8;
+    --text-body: #cbd5e1;
+    --border: rgba(255,255,255,0.08);
+    --font-display: 'Sora', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--navy);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    height: 64px;
+    background: rgba(13,15,26,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-display); font-weight: 700; font-size: 1.2rem;
+    color: #fff; text-decoration: none;
+  }
+  .logo-icon {
+    width: 34px; height: 34px; border-radius: 8px;
+    background: var(--purple);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: #fff; }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .btn-ghost {
+    background: none; border: none; color: var(--text-muted);
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    font-family: var(--font-body);
+    transition: color .2s;
+  }
+  .btn-ghost:hover { color: #fff; }
+  .btn-primary {
+    background: var(--purple); color: #fff;
+    border: none; border-radius: 8px;
+    padding: 10px 20px; font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; font-family: var(--font-body);
+    transition: background .2s, transform .15s;
+  }
+  .btn-primary:hover { background: var(--purple-bright); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    padding-top: 64px;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, #3b0f8c 0%, #1a0a45 40%, var(--navy) 100%);
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  #hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%237c3aed' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; padding: 80px 48px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    position: relative; z-index: 1;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4);
+    border-radius: 100px; padding: 8px 16px;
+    font-size: 0.82rem; font-weight: 500; color: var(--purple-light);
+    margin-bottom: 24px;
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    font-weight: 800; line-height: 1.08;
+    margin-bottom: 24px;
+  }
+  .hero-title span { color: var(--purple-light); }
+  .hero-sub {
+    font-size: 1.1rem; color: var(--text-body);
+    line-height: 1.7; margin-bottom: 36px; max-width: 480px;
+  }
+  .hero-sub .highlight { color: var(--purple-light); font-weight: 500; }
+  .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-hero {
+    padding: 14px 28px; border-radius: 10px; font-size: 1rem; font-weight: 600;
+    cursor: pointer; font-family: var(--font-body); transition: all .2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-hero-primary {
+    background: var(--purple); color: #fff; border: none;
+  }
+  .btn-hero-primary:hover { background: var(--purple-bright); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(124,58,237,0.4); }
+  .btn-hero-ghost {
+    background: rgba(255,255,255,0.06); color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .btn-hero-ghost:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+  .hero-stats {
+    display: flex; gap: 48px; margin-top: 52px;
+    padding-top: 36px; border-top: 1px solid var(--border);
+  }
+  .stat-val {
+    font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: #fff;
+  }
+  .stat-label { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* Dashboard mockup */
+  .hero-visual { position: relative; }
+  .dashboard-card {
+    background: var(--navy-card);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+  .dash-titlebar {
+    padding: 14px 18px; background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    display: flex; gap: 8px;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-red { background: #ff5f57; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #28c840; }
+  .dash-body { padding: 24px 24px 8px; }
+  .dash-row {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 16px;
+  }
+  .dash-label { font-size: 0.82rem; color: var(--text-muted); width: 64px; flex-shrink: 0; }
+  .dash-bar-track { flex: 1; height: 28px; background: rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden; }
+  .dash-bar { height: 100%; border-radius: 6px; }
+  .bar-purple { background: linear-gradient(90deg, #7c3aed, #a78bfa); width: 92%; }
+  .bar-green { background: linear-gradient(90deg, #16a34a, #22c55e); width: 85%; }
+  .bar-amber { background: linear-gradient(90deg, #d97706, #f59e0b); width: 72%; }
+  .dash-metrics {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 12px; padding: 16px 0 16px;
+    border-top: 1px solid var(--border); margin-top: 8px;
+  }
+  .metric-block { padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+  .metric-label { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 4px; }
+  .metric-val { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; }
+  .metric-val.green { color: var(--green); }
+  .metric-val.amber { color: var(--amber); }
+  .metric-val.red { color: var(--red); }
+
+  .ai-bubble {
+    position: absolute; top: -20px; right: -20px;
+    background: var(--purple); border-radius: 12px; padding: 12px 16px;
+    font-size: 0.8rem; font-weight: 600; max-width: 180px;
+    box-shadow: 0 8px 32px rgba(124,58,237,0.5);
+    animation: float 6s ease-in-out infinite; animation-delay: .5s;
+  }
+  .ai-bubble-label { font-size: 0.7rem; font-weight: 400; color: rgba(255,255,255,0.7); margin-bottom: 2px; }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 100px 48px; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-tag {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--purple-light); margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 800; line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .section-title .muted { color: var(--text-muted); }
+  .section-sub {
+    font-size: 1rem; color: var(--text-muted);
+    max-width: 560px; margin: 0 auto;
+    line-height: 1.7;
+  }
+  .text-center { text-align: center; }
+
+  /* ── PROBLEM ── */
+  #problem { background: #f8f9fc; color: #111; }
+  #problem .section-tag { color: #7c3aed; }
+  #problem .section-title { color: #111; }
+  #problem .section-title .muted { color: #7c3aed; }
+  #problem .section-sub { color: #64748b; }
+
+  .compare-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    margin-top: 48px; align-items: start;
+  }
+  .compare-card {
+    border-radius: 16px; padding: 32px;
+  }
+  .compare-card.bad {
+    background: #fff; border: 1px solid #e2e8f0;
+  }
+  .compare-card.good {
+    background: linear-gradient(135deg, #6d28d9, #7c3aed);
+    color: #fff;
+  }
+  .compare-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.78rem; font-weight: 600; border-radius: 6px;
+    padding: 4px 10px; margin-bottom: 20px;
+  }
+  .badge-bad { background: #fee2e2; color: #ef4444; }
+  .badge-good { background: rgba(255,255,255,0.2); color: #fff; }
+  .compare-heading {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; margin-bottom: 20px;
+  }
+  .compare-card.bad .compare-heading { color: #1e293b; }
+  .compare-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; border-radius: 10px; margin-bottom: 10px;
+    font-size: 0.9rem;
+  }
+  .compare-card.bad .compare-item { background: #fff7f7; color: #374151; border: 1px solid #fee2e2; }
+  .compare-card.good .compare-item { background: rgba(255,255,255,0.12); color: #fff; }
+  .compare-icon { font-size: 1rem; flex-shrink: 0; width: 28px; text-align: center; }
+  .compare-quote {
+    margin-top: 20px; padding: 14px 16px; border-radius: 10px;
+    font-size: 0.82rem; font-style: italic; line-height: 1.5;
+  }
+  .compare-card.bad .compare-quote { background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
+  .compare-card.good .compare-quote { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+
+  .result-banner {
+    margin-top: 32px; padding: 28px 40px;
+    background: linear-gradient(90deg, #0d9488, #059669);
+    border-radius: 14px; text-align: center;
+    font-family: var(--font-display); font-size: 1.2rem; font-weight: 700;
+    color: #fff;
+  }
+  .result-banner .label { font-size: 0.75rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; opacity: 0.8; margin-bottom: 6px; }
+
+  /* ── FEATURES ── */
+  #features { background: #fff; color: #111; }
+  #features .section-tag { color: var(--purple); }
+  #features .section-title .accent { color: var(--purple); }
+  .features-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+    margin-top: 56px; align-items: start;
+  }
+  .feature-list { display: flex; flex-direction: column; gap: 4px; }
+  .feature-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 20px; border-radius: 12px; cursor: pointer;
+    border: 1px solid transparent; transition: all .2s;
+  }
+  .feature-item:hover { background: #f8f5ff; border-color: #e9d5ff; }
+  .feature-item.active { background: #f5f3ff; border-color: #ddd6fe; }
+  .feature-item-left { display: flex; align-items: center; gap: 16px; }
+  .feature-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: #f5f3ff; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .feature-item.active .feature-icon { background: var(--purple); }
+  .feature-name { font-weight: 600; font-size: 0.95rem; color: #1e293b; }
+  .feature-desc { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+  .feature-chevron { color: #94a3b8; font-size: 0.8rem; }
+  .feature-detail {
+    background: #f8f5ff; border-radius: 16px; padding: 36px;
+    border: 1px solid #e9d5ff;
+  }
+  .feature-detail-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: #ede9fe; display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 20px;
+  }
+  .feature-detail-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
+  .feature-detail-sub { font-size: 0.9rem; color: #7c3aed; font-weight: 500; margin-bottom: 16px; }
+  .feature-detail-body { font-size: 0.9rem; color: #475569; line-height: 1.7; margin-bottom: 24px; }
+  .feature-bullets {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .feature-bullet {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; color: #374151;
+  }
+  .bullet-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); flex-shrink: 0; }
+
+  /* ── HOW IT WORKS ── */
+  #how {
+    background: linear-gradient(180deg, #0d0f1a 0%, #111827 100%);
+    color: #fff;
+  }
+  #how .section-tag { color: var(--purple-light); }
+  #how .section-sub { color: var(--text-muted); }
+  .steps-row {
+    display: grid; grid-template-columns: repeat(5,1fr); gap: 16px;
+    margin-top: 56px;
+  }
+  .step-col { text-align: center; position: relative; }
+  .step-col:not(:last-child)::after {
+    content: ''; position: absolute;
+    top: 28px; right: -8px; width: 16px; height: 2px;
+    background: linear-gradient(90deg, var(--purple), transparent);
+  }
+  .step-icon-wrap {
+    width: 56px; height: 56px; border-radius: 14px; margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 24px;
+  }
+  .step-num {
+    font-size: 0.72rem; color: var(--purple-light); font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .step-card {
+    background: var(--navy-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 16px;
+    margin-top: 12px; text-align: left;
+  }
+  .step-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; }
+  .step-body { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+  .step-divider {
+    display: grid; grid-template-columns: repeat(5,1fr); gap: 16px;
+    margin-top: 0;
+  }
+  .step-divider-line {
+    height: 3px; border-radius: 2px;
+    background: var(--border);
+  }
+  .step-divider-line.active { background: var(--purple); }
+
+  /* ── VALUE / STAKEHOLDERS ── */
+  #value { background: #f8f9fc; color: #111; }
+  #value .section-tag { color: var(--purple); }
+  #value .section-title { color: #111; }
+
+  .stakeholder-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 20px; margin-top: 48px;
+  }
+  .stakeholder-card {
+    background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 16px; padding: 28px 24px;
+  }
+  .s-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    margin-bottom: 16px;
+  }
+  .s-icon.purple { background: #ede9fe; }
+  .s-icon.blue { background: #dbeafe; }
+  .s-icon.green { background: #dcfce7; }
+  .s-icon.amber { background: #fef3c7; }
+  .s-title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: #1e293b; margin-bottom: 14px; }
+  .s-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .s-list li {
+    font-size: 0.82rem; color: #475569;
+    padding-left: 14px; position: relative; line-height: 1.4;
+  }
+  .s-list li::before {
+    content: '•'; position: absolute; left: 0;
+    color: var(--purple); font-weight: 700;
+  }
+
+  .compare-table-wrap {
+    margin-top: 48px; background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 16px; overflow: hidden;
+    padding: 32px;
+  }
+  .compare-table-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+  .compare-table-sub { font-size: 0.85rem; color: #64748b; margin-bottom: 24px; }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: 0.8rem; font-weight: 600; padding: 12px 16px; text-align: left; border-bottom: 2px solid #e2e8f0; }
+  th:nth-child(2) { color: #64748b; }
+  th:nth-child(3) { color: var(--purple); }
+  td { padding: 16px; font-size: 0.88rem; border-bottom: 1px solid #f1f5f9; }
+  td:first-child { font-weight: 600; color: #1e293b; }
+  td:nth-child(2) { color: #64748b; }
+  td:nth-child(3) { color: var(--purple); font-weight: 500; }
+  tr:last-child td { border-bottom: none; }
+
+  /* ── CTA ── */
+  #cta {
+    background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a855f7 100%);
+    padding: 100px 48px; text-align: center;
+  }
+  #cta .section-inner { max-width: 700px; }
+  #cta h2 {
+    font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800; margin-bottom: 16px; color: #fff;
+  }
+  #cta p { font-size: 1rem; color: rgba(255,255,255,0.8); margin-bottom: 36px; line-height: 1.7; }
+  .cta-buttons { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+  .btn-cta-white {
+    background: #fff; color: var(--purple);
+    border: none; border-radius: 10px; padding: 14px 28px;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    font-family: var(--font-body); transition: all .2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-cta-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+  .btn-cta-outline {
+    background: rgba(255,255,255,0.1); color: #fff;
+    border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 14px 28px;
+    font-size: 1rem; font-weight: 600; cursor: pointer;
+    font-family: var(--font-body); transition: all .2s;
+  }
+  .btn-cta-outline:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+  .cta-trust {
+    display: flex; justify-content: center; gap: 28px;
+    font-size: 0.82rem; color: rgba(255,255,255,0.7);
+    flex-wrap: wrap;
+  }
+  .cta-trust-item { display: flex; align-items: center; gap: 6px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy); border-top: 1px solid var(--border);
+    padding: 64px 48px 40px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+  .footer-brand { }
+  .footer-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: #fff; margin-bottom: 12px; }
+  .footer-tagline { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; max-width: 240px; }
+  .footer-col h4 { font-weight: 600; font-size: 0.9rem; color: #fff; margin-bottom: 16px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color .2s; }
+  .footer-col a:hover { color: #fff; }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 28px; border-top: 1px solid var(--border);
+    font-size: 0.82rem; color: var(--text-muted);
+  }
+  .footer-bottom a { color: var(--text-muted); text-decoration: none; }
+  .footer-bottom a:hover { color: #fff; }
+
+  /* ── ANIMATIONS ── */
+  .fade-up {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .hero-inner { grid-template-columns: 1fr; padding: 60px 24px; }
+    .hero-visual { display: none; }
+    section { padding: 64px 24px; }
+    .compare-grid, .features-grid, .stakeholder-grid { grid-template-columns: 1fr; }
+    .steps-row { grid-template-columns: 1fr 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">✦</div>
+    OK2Source
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#value">Pricing</a></li>
+    <li><a href="#">Resources</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-ghost">Sign In</button>
+    <button class="btn-primary">Request Demo</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-left fade-up">
+      <div class="hero-badge">✦ AI-Native Procurement</div>
+      <h1 class="hero-title">
+        <span>OK2Source</span><br>
+        Procurement OS
+      </h1>
+      <p class="hero-sub">
+        The only platform that connects procurement execution directly to your hardware development timeline.
+        <span class="highlight">Source faster. Launch on time.</span>
+      </p>
+      <div class="hero-buttons">
+        <button class="btn-hero btn-hero-primary">Request Demo →</button>
+        <button class="btn-hero btn-hero-ghost">▷ Watch Overview</button>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-val">40–50%</div>
+          <div class="stat-label">Faster RFQ Cycles</div>
+        </div>
+        <div>
+          <div class="stat-val">2000+</div>
+          <div class="stat-label">Components Managed</div>
+        </div>
+        <div>
+          <div class="stat-val">60–70%</div>
+          <div class="stat-label">Less Manual Work</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual fade-up" style="animation-delay:.2s">
+      <div class="ai-bubble">
+        <div class="ai-bubble-label">AI Recommendation</div>
+        Engage Supplier Now
+      </div>
+      <div class="dashboard-card">
+        <div class="dash-titlebar">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+        </div>
+        <div class="dash-body">
+          <div class="dash-row">
+            <span class="dash-label">Q1 2026</span>
+            <div class="dash-bar-track"><div class="dash-bar bar-purple"></div></div>
+          </div>
+          <div class="dash-row">
+            <span class="dash-label">Q2 2026</span>
+            <div class="dash-bar-track"><div class="dash-bar bar-green"></div></div>
+          </div>
+          <div class="dash-row">
+            <span class="dash-label">Q3 2026</span>
+            <div class="dash-bar-track"><div class="dash-bar bar-amber"></div></div>
+          </div>
+          <div class="dash-metrics">
+            <div class="metric-block">
+              <div class="metric-label">On Track</div>
+              <div class="metric-val green">847</div>
+            </div>
+            <div class="metric-block">
+              <div class="metric-label">At Risk</div>
+              <div class="metric-val amber">23</div>
+            </div>
+            <div class="metric-block">
+              <div class="metric-label">Delayed</div>
+              <div class="metric-val red">5</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="section-inner">
+    <div class="text-center fade-up">
+      <h2 class="section-title">Procurement &amp; Programs<br><span class="muted">Don't Speak the Same Language</span></h2>
+      <p class="section-sub">While procurement teams juggle RFQs and supplier quotes, program managers track milestones in separate tools. This disconnect costs time, money, and launches.</p>
+    </div>
+    <div class="compare-grid fade-up">
+      <div class="compare-card bad">
+        <div class="compare-badge badge-bad">✕ Traditional Approach</div>
+        <div class="compare-heading">Fragmented &amp; Reactive</div>
+        <div class="compare-item"><span class="compare-icon">🕐</span> 60-70% of time on non-value-added tasks</div>
+        <div class="compare-item"><span class="compare-icon">⚠️</span> Late discovery of supplier constraints</div>
+        <div class="compare-item"><span class="compare-icon">💲</span> Cost overruns from rushed sourcing</div>
+        <div class="compare-item"><span class="compare-icon">🚫</span> Quality issues from misaligned timelines</div>
+        <div class="compare-quote">"Engineering specs → Procurement RFQs → Manual execution → Delayed nominations → Schedule slip"</div>
+      </div>
+      <div class="compare-card good">
+        <div class="compare-badge badge-good">✓ OK2Source Approach</div>
+        <div class="compare-heading">Unified &amp; Proactive</div>
+        <div class="compare-item"><span class="compare-icon">✓</span> AI-powered supplier discovery &amp; matching</div>
+        <div class="compare-item"><span class="compare-icon">✓</span> Automated RFQ management &amp; comparison</div>
+        <div class="compare-item"><span class="compare-icon">✓</span> Real-time program milestone alignment</div>
+        <div class="compare-item"><span class="compare-icon">✓</span> Proactive risk identification weeks ahead</div>
+        <div class="compare-quote">"BOM + Milestones → AI prioritized queue → Automated comparison → On-time launch"</div>
+      </div>
+    </div>
+    <div class="result-banner fade-up">
+      <div class="label">The Result</div>
+      Faster time to market, more predictable costs, and resilient supply chains
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div class="text-center fade-up">
+      <div class="section-tag">CORE CAPABILITIES</div>
+      <h2 class="section-title">Everything You Need to<br><span class="accent">Transform Procurement</span></h2>
+    </div>
+    <div class="features-grid fade-up">
+      <div class="feature-list" id="featureList">
+        <div class="feature-item active" onclick="selectFeature(0, this)">
+          <div class="feature-item-left">
+            <div class="feature-icon">🧠</div>
+            <div>
+              <div class="feature-name">AI-Powered Timeline Generation</div>
+              <div class="feature-desc">Work backwards from launch</div>
+            </div>
+          </div>
+          <span class="feature-chevron">▾</span>
+        </div>
+        <div class="feature-item" onclick="selectFeature(1, this)">
+          <div class="feature-item-left">
+            <div class="feature-icon">📋</div>
+            <div>
+              <div class="feature-name">Structured RFX Management</div>
+              <div class="feature-desc">End the email chaos</div>
+            </div>
+          </div>
+          <span class="feature-chevron">›</span>
+        </div>
+        <div class="feature-item" onclick="selectFeature(2, this)">
+          <div class="feature-item-left">
+            <div class="feature-icon">⚖️</div>
+            <div>
+              <div class="feature-name">Intelligent Bid Comparison</div>
+              <div class="feature-desc">Apples-to-apples analysis</div>
+            </div>
+          </div>
+          <span class="feature-chevron">›</span>
+        </div>
+        <div class="feature-item" onclick="selectFeature(3, this)">
+          <div class="feature-item-left">
+            <div class="feature-icon">🤝</div>
+            <div>
+              <div class="feature-name">Supplier Collaboration Portal</div>
+              <div class="feature-desc">Seamless external engagement</div>
+            </div>
+          </div>
+          <span class="feature-chevron">›</span>
+        </div>
+        <div class="feature-item" onclick="selectFeature(4, this)">
+          <div class="feature-item-left">
+            <div class="feature-icon">📊</div>
+            <div>
+              <div class="feature-name">Cross-Functional Visibility</div>
+              <div class="feature-desc">One source of truth</div>
+            </div>
+          </div>
+          <span class="feature-chevron">›</span>
+        </div>
+        <div class="feature-item" onclick="selectFeature(5, this)">
+          <div class="feature-item-left">
+            <div class="feature-icon">💰</div>
+            <div>
+              <div class="feature-name">BOM Cost Management</div>
+              <div class="feature-desc">Total cost visibility</div>
+            </div>
+          </div>
+          <span class="feature-chevron">›</span>
+        </div>
+      </div>
+      <div class="feature-detail" id="featureDetail">
+        <div class="feature-detail-icon">🧠</div>
+        <div class="feature-detail-title">AI-Powered Timeline Generation</div>
+        <div class="feature-detail-sub">Work backwards from launch</div>
+        <div class="feature-detail-body">Our AI ingests program milestones, BOM data, and commodity classifications to automatically generate a forward-looking sourcing timeline. Get recommended spec release dates, nomination deadlines, and tooling kick-off dates for every component.</div>
+        <div class="feature-bullets">
+          <div class="feature-bullet"><div class="bullet-dot"></div>Automatic lead time modeling by commodity</div>
+          <div class="feature-bullet"><div class="bullet-dot"></div>Critical path risk identification</div>
+          <div class="feature-bullet"><div class="bullet-dot"></div>Design freeze recommendations</div>
+          <div class="feature-bullet"><div class="bullet-dot"></div>Intelligent sourcing prioritization</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="text-center fade-up">
+      <div class="section-tag">HOW IT WORKS</div>
+      <h2 class="section-title">From BOM to Launch,<br><span class="muted">Seamlessly Connected</span></h2>
+      <p class="section-sub">Five steps to transform your procurement from reactive firefighting to proactive program alignment.</p>
+    </div>
+    <div class="step-divider fade-up" style="margin-top:56px;">
+      <div class="step-divider-line active"></div>
+      <div class="step-divider-line active"></div>
+      <div class="step-divider-line active"></div>
+      <div class="step-divider-line active"></div>
+      <div class="step-divider-line active"></div>
+    </div>
+    <div class="steps-row fade-up">
+      <div class="step-col">
+        <div class="step-icon-wrap" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">📤</div>
+        <div class="step-num">Step 01</div>
+        <div class="step-card">
+          <div class="step-title">Input Program Data</div>
+          <div class="step-body">Upload your BOM, define milestones, set pre-production build dates and SOP targets.</div>
+        </div>
+      </div>
+      <div class="step-col">
+        <div class="step-icon-wrap" style="background:linear-gradient(135deg,#2563eb,#60a5fa);">🧠</div>
+        <div class="step-num">Step 02</div>
+        <div class="step-card">
+          <div class="step-title">AI Generates Timeline</div>
+          <div class="step-body">Our AI models lead times, logistics, and admin processes to recommend optimal engagement dates.</div>
+        </div>
+      </div>
+      <div class="step-col">
+        <div class="step-icon-wrap" style="background:linear-gradient(135deg,#0891b2,#38bdf8);">📄</div>
+        <div class="step-num">Step 03</div>
+        <div class="step-card">
+          <div class="step-title">Execute Structured RFQs</div>
+          <div class="step-body">Issue RFQs from your prioritized queue, suppliers submit through the portal.</div>
+        </div>
+      </div>
+      <div class="step-col">
+        <div class="step-icon-wrap" style="background:linear-gradient(135deg,#059669,#34d399);">📊</div>
+        <div class="step-num">Step 04</div>
+        <div class="step-card">
+          <div class="step-title">Compare &amp; Nominate</div>
+          <div class="step-body">Normalized bids, AI recommendations, cross-functional approval workflow.</div>
+        </div>
+      </div>
+      <div class="step-col">
+        <div class="step-icon-wrap" style="background:linear-gradient(135deg,#0d9488,#2dd4bf);">✅</div>
+        <div class="step-num">Step 05</div>
+        <div class="step-card">
+          <div class="step-title">Track &amp; Deliver</div>
+          <div class="step-body">Real-time visibility into sourcing progress against program milestones.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE -->
+<section id="value">
+  <div class="section-inner">
+    <div class="text-center fade-up">
+      <h2 class="section-title">Value for Every Stakeholder</h2>
+      <p class="section-sub">From individual contributors to executive leadership, OK2Source delivers measurable impact across your organization.</p>
+    </div>
+    <div class="stakeholder-grid fade-up">
+      <div class="stakeholder-card">
+        <div class="s-icon purple">👥</div>
+        <div class="s-title">Supply Chain Teams</div>
+        <ul class="s-list">
+          <li>Reduce non-value-added work by 60-70%</li>
+          <li>Shift from firefighting to strategic planning</li>
+          <li>Increase confidence in supplier commitments</li>
+          <li>AI-prioritized sourcing queue</li>
+        </ul>
+      </div>
+      <div class="stakeholder-card">
+        <div class="s-icon blue">🎯</div>
+        <div class="s-title">Program Leadership</div>
+        <ul class="s-list">
+          <li>Early visibility into supply risks</li>
+          <li>Data-driven cost vs. schedule tradeoffs</li>
+          <li>Lower impact to launch schedules</li>
+          <li>BOM cost analysis &amp; opportunities</li>
+        </ul>
+      </div>
+      <div class="stakeholder-card">
+        <div class="s-icon green">🏢</div>
+        <div class="s-title">Enterprise</div>
+        <ul class="s-list">
+          <li>Faster time to market</li>
+          <li>Reduced expedite costs</li>
+          <li>Lower total cost of ownership</li>
+          <li>Cross-functional alignment</li>
+        </ul>
+      </div>
+      <div class="stakeholder-card">
+        <div class="s-icon amber">🏆</div>
+        <div class="s-title">Market Advantage</div>
+        <ul class="s-list">
+          <li>Only platform connecting procurement to milestones</li>
+          <li>AI-estimated + supplier-confirmed timelines</li>
+          <li>Cross-functional accountability layer</li>
+          <li>Proactive vs. reactive sourcing</li>
+        </ul>
+      </div>
+    </div>
+    <div class="compare-table-wrap fade-up">
+      <div class="compare-table-title">How We Compare</div>
+      <div class="compare-table-sub">OK2Source vs. traditional procurement tools</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Traditional Tools</th>
+            <th>OK2Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Core Focus</td>
+            <td>Digitize RFQ process</td>
+            <td>Program-aligned sourcing strategy</td>
+          </tr>
+          <tr>
+            <td>Timeline</td>
+            <td>Post-design sourcing</td>
+            <td>Pre-design engagement planning</td>
+          </tr>
+          <tr>
+            <td>Primary Value</td>
+            <td>Faster quote comparison</td>
+            <td>Earlier risk visibility &amp; schedule protection</td>
+          </tr>
+          <tr>
+            <td>AI Application</td>
+            <td>Data standardization</td>
+            <td>Timeline modeling &amp; risk forecasting</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="section-inner fade-up">
+    <h2>Ready to Transform Your<br>Hardware Procurement?</h2>
+    <p>Join leading hardware companies that are already sourcing faster, launching on time, and building resilient supply chains with OK2Source.</p>
+    <div class="cta-buttons">
+      <button class="btn-cta-white">📅 Schedule a Demo</button>
+      <button class="btn-cta-outline">Watch Overview</button>
+      <button class="btn-cta-outline">View Pricing</button>
+    </div>
+    <div class="cta-trust">
+      <span class="cta-trust-item">✓ No credit card required</span>
+      <span class="cta-trust-item">✓ 14-day free trial</span>
+      <span class="cta-trust-item">✓ SOC 2 compliant</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="logo-icon">✦</div>
+          OK2Source
+        </div>
+        <div class="footer-tagline">AI-Native Procurement Operating System for hardware companies.</div>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Integrations</a></li>
+          <li><a href="#">Roadmap</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API Reference</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 OK2Source AI. All rights reserved.</span>
+      <div style="display:flex;gap:20px;">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Intersection observer for fade-up animations
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Feature accordion
+  const features = [
+    {
+      icon: '🧠', title: 'AI-Powered Timeline Generation', sub: 'Work backwards from launch',
+      body: 'Our AI ingests program milestones, BOM data, and commodity classifications to automatically generate a forward-looking sourcing timeline. Get recommended spec release dates, nomination deadlines, and tooling kick-off dates for every component.',
+      bullets: ['Automatic lead time modeling by commodity','Critical path risk identification','Design freeze recommendations','Intelligent sourcing prioritization']
+    },
+    {
+      icon: '📋', title: 'Structured RFX Management', sub: 'End the email chaos',
+      body: 'Replace scattered email threads with a centralized RFX hub. Create structured RFQs, RFIs, and RFPs from BOM line items, track supplier responses in one place, and never lose a quote again.',
+      bullets: ['BOM-native RFQ generation','Supplier response tracking','Auto-reminders & deadline management','Version-controlled quote history']
+    },
+    {
+      icon: '⚖️', title: 'Intelligent Bid Comparison', sub: 'Apples-to-apples analysis',
+      body: 'AI normalizes supplier bids across unit price, NRE, tooling, lead time, and risk factors. Get instant ranked recommendations with full audit trails for cross-functional approval.',
+      bullets: ['Normalized cost breakdowns','Multi-factor scoring','Risk-adjusted rankings','One-click approval workflows']
+    },
+    {
+      icon: '🤝', title: 'Supplier Collaboration Portal', sub: 'Seamless external engagement',
+      body: 'Give suppliers a dedicated portal to receive RFQs, submit quotes, confirm lead times, and track order status — without needing a login to your internal systems.',
+      bullets: ['No-login supplier access','Structured quote submission','Real-time status updates','Secure document sharing']
+    },
+    {
+      icon: '📊', title: 'Cross-Functional Visibility', sub: 'One source of truth',
+      body: 'Program managers, supply chain, and finance see the same real-time picture. Sourcing milestones map directly to EVT/DVT/PVT gates so everyone speaks the same language.',
+      bullets: ['Live program milestone mapping','Role-based dashboards','Executive summary views','Exportable reports']
+    },
+    {
+      icon: '💰', title: 'BOM Cost Management', sub: 'Total cost visibility',
+      body: 'Track target vs. quoted vs. awarded costs at every BOM level. Model cost scenarios, identify savings opportunities, and hit your COGS targets before design freeze.',
+      bullets: ['Target vs. actual cost tracking','Multi-scenario modeling','Commodity price intelligence','COGS forecasting']
+    }
+  ];
+
+  function selectFeature(idx, el) {
+    document.querySelectorAll('.feature-item').forEach((item, i) => {
+      item.classList.toggle('active', i === idx);
+      item.querySelector('.feature-chevron').textContent = i === idx ? '▾' : '›';
+    });
+    const f = features[idx];
+    document.getElementById('featureDetail').innerHTML = `
+      <div class="feature-detail-icon">${f.icon}</div>
+      <div class="feature-detail-title">${f.title}</div>
+      <div class="feature-detail-sub">${f.sub}</div>
+      <div class="feature-detail-body">${f.body}</div>
+      <div class="feature-bullets">
+        ${f.bullets.map(b => `<div class="feature-bullet"><div class="bullet-dot"></div>${b}</div>`).join('')}
+      </div>
+    `;
+  }
+</script>
+</body>
+</html>
