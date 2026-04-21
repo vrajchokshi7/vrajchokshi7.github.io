@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220">
+  <!-- Left rounded rect - light purple -->
+  <rect x="10" y="40" width="130" height="110" rx="28" fill="#9b72f5"/>
+  <!-- Checkmark -->
+  <polyline points="45,96 68,120 105,72" fill="none" stroke="white" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Horizontal connector -->
+  <line x1="140" y1="95" x2="178" y2="95" stroke="#3d2080" stroke-width="12" stroke-linecap="square"/>
+  <!-- Vertical branch -->
+  <line x1="178" y1="48" x2="178" y2="142" stroke="#3d2080" stroke-width="12" stroke-linecap="square"/>
+  <!-- Top branch -->
+  <line x1="178" y1="48" x2="196" y2="48" stroke="#3d2080" stroke-width="12" stroke-linecap="square"/>
+  <!-- Bottom branch -->
+  <line x1="178" y1="142" x2="196" y2="142" stroke="#3d2080" stroke-width="12" stroke-linecap="square"/>
+  <!-- Top right node -->
+  <rect x="192" y="22" width="114" height="54" rx="18" fill="#3d2080"/>
+  <circle cx="232" cy="49" r="9" fill="white"/>
+  <circle cx="270" cy="49" r="9" fill="white"/>
+  <!-- Bottom right node -->
+  <rect x="192" y="116" width="114" height="54" rx="18" fill="#3d2080"/>
+  <circle cx="232" cy="143" r="9" fill="white"/>
+  <circle cx="270" cy="143" r="9" fill="white"/>
+</svg>
