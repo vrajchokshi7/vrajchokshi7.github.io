@@ -1,24 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- Left large rounded rect (light purple) -->
-  <rect x="4" y="22" width="46" height="56" rx="12" fill="#9b72f5"/>
-  <!-- Smaller, elegant checkmark -->
-  <polyline points="18,50 24,57 36,40" fill="none" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- Horizontal connector from left rect to branch point -->
-  <line x1="50" y1="50" x2="64" y2="50" stroke="#3d2080" stroke-width="5" stroke-linecap="round"/>
-  <!-- Vertical connector -->
-  <line x1="64" y1="28" x2="64" y2="72" stroke="#3d2080" stroke-width="5" stroke-linecap="round"/>
-  <!-- Top connector to right node -->
-  <line x1="64" y1="28" x2="72" y2="28" stroke="#3d2080" stroke-width="5" stroke-linecap="round"/>
-  <!-- Bottom connector to right node -->
-  <line x1="64" y1="72" x2="72" y2="72" stroke="#3d2080" stroke-width="5" stroke-linecap="round"/>
-  <!-- Top right node (dark purple) -->
-  <rect x="70" y="16" width="26" height="24" rx="7" fill="#3d2080"/>
-  <!-- Top node dots -->
-  <circle cx="80" cy="28" r="3" fill="white"/>
-  <circle cx="89" cy="28" r="3" fill="white"/>
-  <!-- Bottom right node (dark purple) -->
-  <rect x="70" y="60" width="26" height="24" rx="7" fill="#3d2080"/>
-  <!-- Bottom node dots -->
-  <circle cx="80" cy="72" r="3" fill="white"/>
-  <circle cx="89" cy="72" r="3" fill="white"/>
+  <rect x="4" y="28" width="44" height="44" rx="11" fill="#9b72f5"/>
+  <!-- Smaller checkmark -->
+  <polyline points="19,51 24,57 34,43" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="48" y1="50" x2="62" y2="50" stroke="#3d2080" stroke-width="4.5" stroke-linecap="square"/>
+  <line x1="62" y1="26" x2="62" y2="74" stroke="#3d2080" stroke-width="4.5" stroke-linecap="square"/>
+  <line x1="62" y1="26" x2="68" y2="26" stroke="#3d2080" stroke-width="4.5" stroke-linecap="square"/>
+  <line x1="62" y1="74" x2="68" y2="74" stroke="#3d2080" stroke-width="4.5" stroke-linecap="square"/>
+  <rect x="66" y="14" width="30" height="24" rx="8" fill="#3d2080"/>
+  <circle cx="77" cy="26" r="3.2" fill="white"/>
+  <circle cx="87" cy="26" r="3.2" fill="white"/>
+  <rect x="66" y="62" width="30" height="24" rx="8" fill="#3d2080"/>
+  <circle cx="77" cy="74" r="3.2" fill="white"/>
+  <circle cx="87" cy="74" r="3.2" fill="white"/>
 </svg>
